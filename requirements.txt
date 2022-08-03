@@ -1,0 +1,7 @@
+bs4
+discord.py
+lxml
+markdownify
+python-dotenv
+regex
+requests
