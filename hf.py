@@ -4,8 +4,10 @@ import regex
 
 
 BASE_URL = 'https://www.hentai-foundry.com'
-URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 PARSER = 'lxml'
+
+EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
+URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 
 
 def find_urls(text):
@@ -35,6 +37,19 @@ def classify_url(url):
         return ''
 
 
+def clean_description(text):
+    """Clean up image/story description text and convert to markdown.
+
+    argument text: str
+
+    returns: str
+    """
+
+    markdown = markdownify.markdownify(text)
+
+    return EMPTY_LINES_PATTERN.sub('\n\n', markdown)
+
+
 def summarize_image(page):
     """Create summary of an HF image page.
 
@@ -61,7 +76,7 @@ def summarize_image(page):
     descriptionbox = soup.find('section', attrs={'id': 'descriptionBox'})
     summary['user_icon'] = 'https:' + descriptionbox.find('img').get('src')
     description = descriptionbox.find('div', attrs={'class': 'picDescript'})
-    summary['description'] = markdownify.markdownify(description.decode_contents())
+    summary['description'] = clean_description(description.decode_contents())
 
     ratings = soup.find('div', attrs={'class': 'ratings_box'}).find_all('span')
     summary['ratings'] = [r.get_text() for r in ratings]
@@ -96,6 +111,6 @@ def summarize_story(page):
     summary['ratings'] = [r.get_text() for r in ratings]
     for div in description.find_all('div'):
         div.decompose()
-    summary['description'] = markdownify.markdownify(description.decode_contents())
+    summary['description'] = clean_description(description.decode_contents())
 
     return summary
