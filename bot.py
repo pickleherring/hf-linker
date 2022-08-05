@@ -1,5 +1,6 @@
 import os
 
+import aiohttp
 import discord
 import dotenv
 
@@ -8,6 +9,14 @@ import hf
 
 dotenv.load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+
+REQUEST_PARAMS = {'enterAgree': 1}
+
+
+summarizers = {
+    'image': hf.summarize_image,
+    'story': hf.summarize_story,
+}
 
 client = discord.Client()
 
@@ -52,13 +61,25 @@ async def on_message(message):
 
     urls = hf.find_urls(message.content)
 
-    for url in urls:
+    if urls:
+    
+        async with aiohttp.ClientSession() as session:
 
-        summary = hf.summarize_page(url)
+            for url in urls:
 
-        if summary:
-            embed = format_summary(summary)
-            await message.channel.send(embed=embed)
+                url_type = hf.classify_url(url)
+
+                if url_type:
+                    
+                    async with session.get('https://' + url, params=REQUEST_PARAMS) as response:
+                        if response.status == 200:
+                            page = await response.text()
+
+                    summary = summarizers[url_type](page)
+
+                    if summary:
+                        embed = format_summary(summary)
+                        await message.channel.send(embed=embed)
 
 
 client.run(DISCORD_TOKEN)
