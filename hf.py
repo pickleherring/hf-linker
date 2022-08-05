@@ -8,6 +8,8 @@ PARSER = 'lxml'
 
 EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
+IMAGE_URL_PATTERN = regex.compile(r'www\.hentai-foundry.com/pictures/user/[^/]+/[^/]+/[^/]+')
+STORY_URL_PATTERN = regex.compile(r'www\.hentai-foundry.com/stories/user/[^/]+/[^/]+/[^/]+.*')
 
 
 def find_urls(text):
@@ -29,10 +31,10 @@ def classify_url(url):
     returns: str ('', 'image', 'story')
     """
 
-    if 'hentai-foundry.com/stories/user' in url:
-        return 'story'
-    elif 'hentai-foundry.com/pictures/user' in url:
+    if IMAGE_URL_PATTERN.search(url):
         return 'image'
+    elif STORY_URL_PATTERN.search(url):
+        return 'story'
     else:
         return ''
 
@@ -55,7 +57,15 @@ def summarize_image(page):
 
     argument page: str (html)
 
-    returns: see summarize_page()
+    returns: dict with keys:
+        'description': str
+        'image': str
+        'ratings': list of str
+        'title': str
+        'url': str
+        'user': str
+        'user_icon: str
+        'user_url': str
     """
 
     soup = bs4.BeautifulSoup(page, features=PARSER)
@@ -89,7 +99,7 @@ def summarize_story(page):
 
     argument page: str (html)
 
-    returns: see summarize_page()
+    returns: see summarize_image()
     """
 
     soup = bs4.BeautifulSoup(page, features=PARSER)
