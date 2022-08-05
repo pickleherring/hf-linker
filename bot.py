@@ -1,3 +1,4 @@
+import logging
 import os
 
 import aiohttp
@@ -6,6 +7,8 @@ import dotenv
 
 import hf
 
+
+logging.basicConfig(level=logging.INFO)
 
 dotenv.load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
