@@ -6,7 +6,7 @@ import regex
 BASE_URL = 'https://www.hentai-foundry.com'
 PARSER = 'lxml'
 
-EMBEDDED_IMG_PATTERN = regex.compile(r'!\[]\(\S*\)')
+EMBEDDED_IMG_PATTERN = regex.compile(r'\[!\[\]\([^)]*\)\]\([^)]*\)')
 EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 
