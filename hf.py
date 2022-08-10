@@ -6,10 +6,14 @@ import regex
 BASE_URL = 'https://www.hentai-foundry.com'
 PARSER = 'lxml'
 
+EMBEDDED_IMG_PATTERN = regex.compile(r'!\[]\(\S*\)')
 EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
-IMAGE_URL_PATTERN = regex.compile(r'www\.hentai-foundry.com/pictures/user/[^/]+/[^/]+/[^/]+')
-STORY_URL_PATTERN = regex.compile(r'www\.hentai-foundry.com/stories/user/[^/]+/[^/]+/[^/]+.*')
+
+PAGE_TYPE_PATTERNS = {
+    'image': regex.compile(r'www\.hentai-foundry.com/pictures/user/[^/]+/[^/]+/[^/]+'),
+    'story': regex.compile(r'www\.hentai-foundry.com/stories/user/[^/]+/[^/]+/[^/]+.*'),
+}
 
 
 def find_urls(text):
@@ -31,12 +35,11 @@ def classify_url(url):
     returns: str ('', 'image', 'story')
     """
 
-    if IMAGE_URL_PATTERN.search(url):
-        return 'image'
-    elif STORY_URL_PATTERN.search(url):
-        return 'story'
-    else:
-        return ''
+    for label, pattern in PAGE_TYPE_PATTERNS.items():
+        if pattern.search(url):
+            return label
+    
+    return ''
 
 
 def clean_description(text):
@@ -48,8 +51,10 @@ def clean_description(text):
     """
 
     markdown = markdownify.markdownify(text)
+    markdown = EMBEDDED_IMG_PATTERN.sub('', markdown)
+    markdown = EMPTY_LINES_PATTERN.sub('\n\n', markdown)
 
-    return EMPTY_LINES_PATTERN.sub('\n\n', markdown)
+    return markdown
 
 
 def summarize_image(page):
