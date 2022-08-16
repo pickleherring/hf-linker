@@ -46,6 +46,11 @@ def format_summary(summary):
         value='**' + '**, **'.join(summary['ratings']) + '**'
     )
 
+    embed.set_footer(
+        text='Hentai Foundry',
+        icon_url='https://img.hentai-foundry.com/themes/Dark/favicon.ico'
+    )
+
     return embed
 
 
