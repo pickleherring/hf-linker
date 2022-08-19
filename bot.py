@@ -41,10 +41,16 @@ def format_summary(summary):
 
     embed.set_image(url=summary['image'])
     
-    embed.add_field(
-        name='ratings',
-        value='**' + '**, **'.join(summary['ratings']) + '**'
-    )
+    if summary['ratings']:
+        embed.add_field(
+            name='ratings',
+            value='**' + '**, **'.join(summary['ratings']) + '**'
+        )
+    else:
+        embed.add_field(
+            name='ratings',
+            value='*none*'
+        )
 
     embed.set_footer(
         text='Hentai Foundry',
