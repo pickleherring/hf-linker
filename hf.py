@@ -11,8 +11,8 @@ EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 
 PAGE_TYPE_PATTERNS = {
-    'image': regex.compile(r'www\.hentai-foundry.com/pictures/user/[^/]+/[^/]+/[^/]+'),
-    'story': regex.compile(r'www\.hentai-foundry.com/stories/user/[^/]+/[^/]+/[^/]+.*'),
+    'image': regex.compile(r'www\.hentai-foundry\.com/pictures/user/[^/]+/[^/]+/[^/]+'),
+    'story': regex.compile(r'www\.hentai-foundry\.com/stories/user/[^/]+/[^/]+/[^/]+.*'),
 }
 
 
