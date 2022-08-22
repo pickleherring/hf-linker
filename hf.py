@@ -6,6 +6,7 @@ import regex
 BASE_URL = 'https://www.hentai-foundry.com'
 PARSER = 'lxml'
 
+BBCODE_IMG_TAG_PATTERN = regex.compile(r'\[/?img\]')
 EMBEDDED_IMG_PATTERN = regex.compile(r'\[\**!\[\]\([^)]*\)\**\]\([^)]*\)')
 EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
@@ -47,11 +48,12 @@ def clean_description(text):
 
     argument text: str
 
-    returns: str
+    returns: str (markdown)
     """
 
     markdown = markdownify.markdownify(text)
     markdown = EMBEDDED_IMG_PATTERN.sub('', markdown)
+    markdown = BBCODE_IMG_TAG_PATTERN.sub('', markdown)
     markdown = EMPTY_LINES_PATTERN.sub('\n\n', markdown)
 
     return markdown
