@@ -22,7 +22,14 @@ summarizers = {
     'story': hf.summarize_story,
 }
 
-bot = commands.Bot(command_prefix='$')
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(
+    command_prefix='$',
+    description='HF linker bot',
+    intents=intents
+)
 
 
 def format_summary(summary):
@@ -69,7 +76,7 @@ async def HFstatus(ctx):
     async with aiohttp.ClientSession() as session:
         async with session.get(hf.BASE_URL, params=REQUEST_PARAMS) as response:
             print('response received')
-            await ctx.message.reply(f'{response.status} {response.reason}')
+            await ctx.send(f'{response.status} {response.reason}')
 
 
 @bot.event
