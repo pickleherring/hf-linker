@@ -3,6 +3,7 @@ import os
 
 import aiohttp
 import discord
+from discord.ext import commands
 import dotenv
 
 import hf
@@ -21,7 +22,7 @@ summarizers = {
     'story': hf.summarize_story,
 }
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='$')
 
 
 def format_summary(summary):
@@ -60,17 +61,27 @@ def format_summary(summary):
     return embed
 
 
-@client.event
+@bot.command
+async def HFstatus(context):
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(hf.BASE_URL, params=REQUEST_PARAMS) as response:
+            reason = await response.reason
+        
+        await context.message.reply(reason)
+
+
+@bot.event
 async def on_ready():
 
-    for guild in client.guilds:
+    for guild in bot.guilds:
         print(f'connected to \'{guild.name}\'')
 
 
-@client.event
+@bot.event
 async def on_message(message):
 
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
     urls = hf.find_urls(message.content)
@@ -96,4 +107,4 @@ async def on_message(message):
                         await message.channel.send(embed=embed)
 
 
-client.run(DISCORD_TOKEN)
+bot.run(DISCORD_TOKEN)
