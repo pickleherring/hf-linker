@@ -26,7 +26,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(
-    command_prefix='$',
+    command_prefix='?',
     description='HF linker bot',
     intents=intents
 )
@@ -113,6 +113,8 @@ async def on_message(message):
                     if summary:
                         embed = format_summary(summary)
                         await message.channel.send(embed=embed)
+    
+    await bot.process_commands(message)
 
 
 bot.run(DISCORD_TOKEN)
