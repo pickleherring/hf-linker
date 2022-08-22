@@ -61,7 +61,7 @@ def format_summary(summary):
     return embed
 
 
-@bot.command
+@bot.command()
 async def HFstatus(context):
 
     print('command invoked')
