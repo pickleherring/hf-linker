@@ -71,12 +71,9 @@ def format_summary(summary):
 @bot.command()
 async def HFstatus(ctx):
 
-    print('command invoked')
-
     async with aiohttp.ClientSession() as session:
         async with session.get(hf.BASE_URL, params=REQUEST_PARAMS) as response:
-            print('response received')
-            await ctx.send(f'{response.status} {response.reason}')
+            await ctx.message.reply(f'{response.status} {response.reason}')
 
 
 @bot.event
