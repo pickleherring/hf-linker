@@ -8,11 +8,13 @@ PARSER = 'lxml'
 
 JUNK_PATTERNS = [
     regex.compile(r'\[/?img\]'),  # bbcode embedded image
-    regex.compile(r'\[\**!\[\]\([^)]*\)\**\]\([^)]*\)'),  # markdown embedded image
-    regex.compile(r'\*{3,}'),  # excess asterisks
+    regex.compile(r'\[\**!\[\]\([^)]*\)\**\]\([^)]*\)'),  # markdown embedded image with extra cruft
+    regex.compile(r'!\[\]\([^)]*\)'),  # markdown embedded image
 ]
 
-EMPTY_LINES_PATTERN = regex.compile(r'\n\s*\n')
+EXCESS_ASTERISKS_PATTERN = regex.compile(r'\*{3,}')
+EMPTY_LINES_PATTERN = regex.compile(r'\n[\s*]*\n')
+
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 
 PAGE_TYPE_PATTERNS = {
@@ -60,6 +62,7 @@ def clean_description(text):
     for pattern in JUNK_PATTERNS:
         markdown = pattern.sub('', markdown)
     
+    markdown = EXCESS_ASTERISKS_PATTERN.sub('**', markdown)
     markdown = EMPTY_LINES_PATTERN.sub('\n\n', markdown)
 
     return markdown

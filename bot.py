@@ -26,7 +26,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(
-    command_prefix='?',
+    command_prefix='/',
     description='HF linker bot',
     intents=intents
 )
@@ -70,6 +70,8 @@ def format_summary(summary):
 
 @bot.command()
 async def HFstatus(ctx):
+    """Check whether hentai-foundry.com is currently reachable.
+    """
 
     async with aiohttp.ClientSession() as session:
         async with session.get(hf.BASE_URL, params=REQUEST_PARAMS) as response:
