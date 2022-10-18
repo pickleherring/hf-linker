@@ -35,7 +35,7 @@ bot = commands.Bot(
 def format_summary(summary):
 
     embed = discord.Embed(
-        colour=discord.Colour.magenta(),
+        colour=discord.Color.from_str('0xff67a2'),
         title=summary['title'],
 		url=summary['url'],
         description=summary['description']
