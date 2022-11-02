@@ -8,11 +8,15 @@ PARSER = 'lxml'
 URL_PATTERN = regex.compile(r'literotica\.com/s/\S*')
 
 AUTHOR_CLASS = 'y_eU'
-DESCRIPTION_CLASS = 'aK_B'
 ICON_CLASS = 'y_eR'
 TAGS_CLASS = 'av_as'
 TITLE_CLASS = 'j_eQ'
 WORDS_CLASS = 'aK_ap'
+
+DESCRIPTION_CLASSES = [
+    'aK_B',
+    'bn_B',
+]
 
 
 def find_urls(text):
@@ -43,7 +47,7 @@ def summarize_story(page):
 
     soup = bs4.BeautifulSoup(page, features=PARSER)
 
-    summary = {}
+    summary = {'description': ''}
 
     author = soup.find('a', attrs={'class': AUTHOR_CLASS})
     summary['author'] = author.get_text()
@@ -52,7 +56,12 @@ def summarize_story(page):
     icon = soup.find('a', attrs={'class': ICON_CLASS})
     summary['author_icon'] = icon.find('img').get('src')
 
-    summary['description'] = soup.find('div', attrs={'class': DESCRIPTION_CLASS}).get_text()
+    for description_class in DESCRIPTION_CLASSES:
+        description = soup.find('div', attrs={'class': description_class})
+        if description:
+            summary['description'] = description.get_text()
+            break
+
     summary['title'] = soup.find('h1', attrs={'class': TITLE_CLASS}).get_text()
 
     tags = soup.find_all('a', attrs={'class': TAGS_CLASS})
