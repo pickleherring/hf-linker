@@ -21,7 +21,7 @@ HF_SUMMARIZERS = {
     'story': hf.summarize_story,
 }
 
-LIT_REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0'}
+LIT_REQUEST_HEADERS = {'User-Agent': ''}
 
 intents = discord.Intents.default()
 intents.message_content = True
