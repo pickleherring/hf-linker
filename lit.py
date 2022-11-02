@@ -48,6 +48,8 @@ def summarize_story(page):
     """
 
     soup = bs4.BeautifulSoup(page, features=PARSER)
+    
+    summary = {}
 
     author = soup.find('a', attrs={'class': AUTHOR_CLASS})
     summary['author'] = author.get_text()
