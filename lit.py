@@ -62,7 +62,7 @@ def summarize_story(page):
     summary['title'] = soup.find('h1', attrs={'class': TITLE_CLASS}).get_text()
 
     tags = soup.find_all('a', attrs={'class': TAGS_CLASS})
-    summary['tags'] = [tag.get_text() for tag in tags]
+    summary['tags'] = list({tag.get_text() for tag in tags})
 
     words = soup.find('span', attrs={'class': WORDS_CLASSES}).get_text()
     summary['words'] = words.split()[0]
