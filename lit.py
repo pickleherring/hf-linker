@@ -11,11 +11,13 @@ AUTHOR_CLASS = 'y_eU'
 ICON_CLASS = 'y_eR'
 TAGS_CLASS = 'av_as'
 TITLE_CLASS = 'j_eQ'
-WORDS_CLASS = 'aK_ap'
-
 DESCRIPTION_CLASSES = [
     'aK_B',
     'bn_B',
+]
+WORDS_CLASSES = [
+    'aK_ap',
+    'bn_ap',
 ]
 
 
@@ -47,8 +49,6 @@ def summarize_story(page):
 
     soup = bs4.BeautifulSoup(page, features=PARSER)
 
-    summary = {'description': ''}
-
     author = soup.find('a', attrs={'class': AUTHOR_CLASS})
     summary['author'] = author.get_text()
     summary['author_url'] = author.get('href')
@@ -56,18 +56,13 @@ def summarize_story(page):
     icon = soup.find('a', attrs={'class': ICON_CLASS})
     summary['author_icon'] = icon.find('img').get('src')
 
-    for description_class in DESCRIPTION_CLASSES:
-        description = soup.find('div', attrs={'class': description_class})
-        if description:
-            summary['description'] = description.get_text()
-            break
-
+    summary['description'] = soup.find('div', attrs={'class': DESCRIPTION_CLASSES}).get_text()
     summary['title'] = soup.find('h1', attrs={'class': TITLE_CLASS}).get_text()
 
     tags = soup.find_all('a', attrs={'class': TAGS_CLASS})
     summary['tags'] = [tag.get_text() for tag in tags]
 
-    words = soup.find('span', attrs={'class': WORDS_CLASS}).get_text()
+    words = soup.find('span', attrs={'class': WORDS_CLASSES}).get_text()
     summary['words'] = words.split()[0]
 
     return summary
