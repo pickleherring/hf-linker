@@ -16,6 +16,7 @@ CONVERT_TAGS = [
 ]
 
 EMPTY_LINES_PATTERN = regex.compile(r'\n[\s*]*\n')
+REPEATED_WHITESPACE_PATTERN = regex.compile(r' {2,}')
 URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
 
 PAGE_TYPE_PATTERNS = {
@@ -60,6 +61,7 @@ def clean_description(text):
 
     markdown = markdownify.markdownify(text, convert=CONVERT_TAGS)
     markdown = EMPTY_LINES_PATTERN.sub('\n\n', markdown)
+    markdown = REPEATED_WHITESPACE_PATTERN.sub(' ', markdown)
 
     return markdown
 
