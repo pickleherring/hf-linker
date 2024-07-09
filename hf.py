@@ -1,6 +1,7 @@
+import re
+
 import bs4
 import markdownify
-import regex
 
 
 BASE_URL = 'https://www.hentai-foundry.com'
@@ -15,13 +16,13 @@ CONVERT_TAGS = [
     'strong',
 ]
 
-EMPTY_LINES_PATTERN = regex.compile(r'\n[\s*]*\n')
-REPEATED_WHITESPACE_PATTERN = regex.compile(r' {2,}')
-URL_PATTERN = regex.compile(r'www\.hentai-foundry\.com/\S*')
+EMPTY_LINES_PATTERN = re.compile(r'\n[\s*]*\n')
+REPEATED_WHITESPACE_PATTERN = re.compile(r' {2,}')
+URL_PATTERN = re.compile(r'www\.hentai-foundry\.com/\S*')
 
 PAGE_TYPE_PATTERNS = {
-    'image': regex.compile(r'www\.hentai-foundry\.com/pictures/user/[^/]+/[^/]+/[^/]+'),
-    'story': regex.compile(r'www\.hentai-foundry\.com/stories/user/[^/]+/[^/]+/[^/]+.*'),
+    'image': re.compile(r'www\.hentai-foundry\.com/pictures/user/[^/]+/[^/]+/[^/]+'),
+    'story': re.compile(r'www\.hentai-foundry\.com/stories/user/[^/]+/[^/]+/[^/]+.*'),
 }
 
 
