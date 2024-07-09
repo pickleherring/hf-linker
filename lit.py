@@ -1,11 +1,12 @@
+import re
+
 import bs4
-import regex
 
 
 BASE_URL = 'https://literotica.com/s'
 PARSER = 'lxml'
 
-URL_PATTERN = regex.compile(r'literotica\.com/s/\S*')
+URL_PATTERN = re.compile(r'literotica\.com/s/\S*')
 
 AUTHOR_CLASS = 'y_eU'
 ICON_CLASS = 'y_eR'
