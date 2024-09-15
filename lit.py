@@ -6,7 +6,7 @@ import bs4
 BASE_URL = 'https://literotica.com/s'
 PARSER = 'lxml'
 
-URL_PATTERN = re.compile(r'literotica\.com/s/\S*')
+URL_PATTERN = re.compile(r'literotica\.com/[sp]/\S*')
 
 AUTHOR_CLASS = 'y_eU'
 ICON_CLASS = 'y_eR'
