@@ -10,10 +10,11 @@ import hf
 import lit
 
 
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('hf-linker')
+logger.setLevel(level=logging.INFO)
 
 dotenv.load_dotenv()
-DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
 HF_REQUEST_PARAMS = {'enterAgree': 1}
 HF_SUMMARIZERS = {
@@ -38,7 +39,7 @@ def format_hf_summary(summary):
     embed = discord.Embed(
         colour=discord.Color.from_str('0xff67a2'),
         title=summary['title'],
-		url=summary['url'],
+        url=summary['url'],
         description=summary['description']
     )
 
@@ -49,7 +50,7 @@ def format_hf_summary(summary):
     )
 
     embed.set_image(url=summary['image'])
-    
+
     if summary['ratings']:
         embed.add_field(
             name='ratings',
@@ -74,7 +75,7 @@ def format_lit_summary(summary, url):
     embed = discord.Embed(
         colour=discord.Color.from_str('0x4a89f3'),
         title=summary['title'],
-		url='https://' + url,
+        url='https://' + url,
         description=summary['description']
     )
 
@@ -132,7 +133,7 @@ async def Litstatus(ctx):
 async def on_ready():
 
     for guild in bot.guilds:
-        print(f'connected to \'{guild.name}\'')
+        logger.info(f'connected to \'{guild.name}\'')
 
 
 @bot.event
@@ -144,42 +145,35 @@ async def on_message(message):
     hf_urls = hf.find_urls(message.content)
     lit_urls = lit.find_urls(message.content)
 
-    if hf_urls:
-    
-        async with aiohttp.ClientSession() as session:
+    try:
 
-            for url in hf_urls:
+        if hf_urls:
+            async with aiohttp.ClientSession() as session:
+                for url in hf_urls:
+                    url_type = hf.classify_url(url)
+                    if url_type:
+                        async with session.get('https://' + url, params=HF_REQUEST_PARAMS) as response:
+                            if response.status == 200:
+                                page = await response.text()
+                                summary = HF_SUMMARIZERS[url_type](page)
+                                if summary:
+                                    embed = format_hf_summary(summary)
+                                    await message.channel.send(embed=embed)
 
-                url_type = hf.classify_url(url)
-
-                if url_type:
-                    
-                    async with session.get('https://' + url, params=HF_REQUEST_PARAMS) as response:
+        if lit_urls:
+            async with aiohttp.ClientSession(headers=LIT_REQUEST_HEADERS) as session:
+                for url in lit_urls:
+                    async with session.get('https://' + url) as response:
                         if response.status == 200:
                             page = await response.text()
+                            summary = lit.summarize_story(page)
+                            if summary:
+                                embed = format_lit_summary(summary, url)
+                                await message.channel.send(embed=embed)
 
-                    summary = HF_SUMMARIZERS[url_type](page)
+    except Exception as e:
+        logger.error(e)
 
-                    if summary:
-                        embed = format_hf_summary(summary)
-                        await message.channel.send(embed=embed)
-    
-    if lit_urls:
-    
-        async with aiohttp.ClientSession(headers=LIT_REQUEST_HEADERS) as session:
-
-            for url in lit_urls:
-
-                async with session.get('https://' + url) as response:
-                    if response.status == 200:
-                        page = await response.text()
-
-                summary = lit.summarize_story(page)
-
-                if summary:
-                    embed = format_lit_summary(summary, url)
-                    await message.channel.send(embed=embed)
-    
     await bot.process_commands(message)
 
 
