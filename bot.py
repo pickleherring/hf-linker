@@ -10,8 +10,7 @@ import hf
 import lit
 
 
-logger = logging.getLogger('hf-linker')
-logger.setLevel(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 dotenv.load_dotenv()
 DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
@@ -133,7 +132,7 @@ async def Litstatus(ctx):
 async def on_ready():
 
     for guild in bot.guilds:
-        logger.info(f'connected to \'{guild.name}\'')
+        print(f'connected to \'{guild.name}\'')
 
 
 @bot.event
@@ -172,7 +171,7 @@ async def on_message(message):
                                 await message.channel.send(embed=embed)
 
     except Exception as e:
-        logger.error(e)
+        print(e)
 
     await bot.process_commands(message)
 
