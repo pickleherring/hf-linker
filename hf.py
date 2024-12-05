@@ -134,8 +134,8 @@ def summarize_story(page):
     description = soup.find('td', attrs={'class': 'storyDescript'})
     ratings = description.find('div', attrs={'class': 'ratings_box'}).find_all('span')
     summary['ratings'] = [r.get_text() for r in ratings]
-    for div in description.find_all('div'):
-        div.decompose()
+    description.find('div', attrs={'class': 'storyRead'}).decompose()
+    description.find('div', attrs={'class': 'storyCategoryRating'}).decompose()
     summary['description'] = clean_description(description.decode_contents())
 
     return summary
