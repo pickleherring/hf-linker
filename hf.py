@@ -156,9 +156,8 @@ def summarize_chapter(page):
 
     chapterbox = soup.find('section', attrs={'id': 'viewChapter'})
     chaptertitle = chapterbox.find('div', attrs={'class': 'boxtitle'})
-    summary['title'] = chaptertitle.get_text()
-
     titlebar = soup.find('div', attrs={'class': 'titlebar'})
+    summary['title'] = titlebar.get_text() + ' : ' + chaptertitle.get_text()
     summary['url'] = BASE_URL + titlebar.find('a').get('href')
 
     storyinfo = soup.find('td', attrs={'class': 'storyInfo'})
