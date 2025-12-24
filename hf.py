@@ -174,6 +174,6 @@ def summarize_chapter(page):
     description.find('div', attrs={'class': 'storyCategoryRating'}).decompose()
 
     excerpt = chapterbox.find('div', attrs={'class': 'boxbody'})
-    summary['description'] = clean_description(excerpt.decode_contents()[:200]) + '...'
+    summary['description'] = clean_description(excerpt.decode_contents()[:250]) + '...'
 
     return summary
