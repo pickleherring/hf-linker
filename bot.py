@@ -19,6 +19,7 @@ HF_REQUEST_PARAMS = {'enterAgree': 1}
 HF_SUMMARIZERS = {
     'image': hf.summarize_image,
     'story': hf.summarize_story,
+    'chapter': hf.summarize_chapter,
 }
 
 LIT_REQUEST_HEADERS = {'User-Agent': ''}
